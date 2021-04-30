@@ -20,7 +20,7 @@ namespace PZgba
       AudioCallback = audioCallback;
     }
     public uint Run() {
-      Tick(8);
+      Arm7.Execute();
       return 8;
     }
 

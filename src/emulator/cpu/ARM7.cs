@@ -39,6 +39,7 @@ namespace PZgba
     {
       Gba = gba;
       R15 = 0;
+      R15 = 0x08000000;
     }
 
     public void Execute()
@@ -84,7 +85,7 @@ namespace PZgba
           }
           R15 = (uint)(R15 + offset + 4);
         }
-        else if ((ins & 0b111000000000000000000000) == 0b001000000000000000000000)
+        else if ((ins & 0b1100000000000000000000000000) == 0b0000000000000000000000000000)
         {
           Console.WriteLine("Data Processing / FSR Transfer");
           // ALU Operations - https://problemkaputt.de/gbatek.htm#armopcodesdataprocessingalu
@@ -99,12 +100,8 @@ namespace PZgba
 
           // Shift by immediate or shift by register
           bool shiftByReg = (ins & BIT_4) != 0;
+          Console.WriteLine($"Shift by reg: {shiftByReg}");
           uint shiftBy;
-          switch (opcode)
-          {
-            default:
-              throw new Exception($"ALU Opcode Unimplemented: {opcode:X}");
-          }
         }
         else
         {
@@ -119,7 +116,7 @@ namespace PZgba
 
     public void SetReg(int reg, uint val)
     {
-      
+
     }
   }
 }

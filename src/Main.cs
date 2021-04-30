@@ -2,6 +2,8 @@ using System;
 using System.Runtime.InteropServices;
 using static SDL2.SDL;
 using System.IO;
+using OpenTK.Graphics.OpenGL;
+using ImGuiNET;
 using PZgba;
 
 namespace PZgbaEmulator
@@ -16,9 +18,11 @@ namespace PZgbaEmulator
         static SDL_Rect rect = new SDL_Rect();
 
         static IntPtr window = IntPtr.Zero;
+        static IntPtr glcontext;
         static GBA Gba;
         static SDL_AudioSpec want, have;
         static uint AudioDevice;
+        static ImGuiIOPtr ImGuiIO;
 
         public static void Main(string[] args)
         {
@@ -30,7 +34,31 @@ namespace PZgbaEmulator
 
             SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
             SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
-            SDL_CreateWindowAndRenderer(width, height, 0, out window, out Renderer);
+            SDL_CreateWindowAndRenderer(width, height, SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE, out window, out Renderer);
+
+            if (window == IntPtr.Zero)
+            {
+                Console.Error.WriteLine("Failed to create SDL Window!");
+            }
+
+            // OpenGL Setup
+            SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_DOUBLEBUFFER, 1);
+            SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_DEPTH_SIZE, 24);
+            SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_STENCIL_SIZE, 8);
+            SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION, 1);
+            glcontext = SDL_GL_CreateContext(window);
+            SDL_GL_MakeCurrent(window, glcontext);
+            GL.ClearColor(1f, 1f, 1f, 1f);
+            GL.Clear(ClearBufferMask.StencilBufferBit | ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            SDL_GL_SetSwapInterval(1);
+
+            var ImGuiContext = ImGui.CreateContext();
+            ImGui.SetCurrentContext(ImGuiContext);
+            ImGuiIO = ImGui.GetIO();
+            ImGuiIO.Fonts.AddFontDefault();
+            ImGui.StyleColorsDark();
 
             want.freq = 65536;
             want.format = AUDIO_F32SYS;
@@ -60,6 +88,7 @@ namespace PZgbaEmulator
                     switch (e.key.keysym.sym)
                     {
                         case SDL_Keycode.SDLK_SPACE:
+                            RunEmulator();
                             break;
                     }
                 }
@@ -67,7 +96,13 @@ namespace PZgbaEmulator
                 {
                     Quit();
                 }
-                RunEmulator();
+
+                ImGui.NewFrame();
+                ImGui.Begin("Stupid");
+                ImGui.Text("Do it for teh lulz");
+                ImGui.End();
+                ImGui.Render();
+                SDL_GL_SwapWindow(window);
             }
         }
 
@@ -81,11 +116,7 @@ namespace PZgbaEmulator
 
         static void RunEmulator()
         {
-            int max = 16777216 / 60;
-            while (max > 0)
-            {
-                max -= (int)Gba.Run();
-            }
+            Gba.Run();
         }
 
         static void AudioReady()
