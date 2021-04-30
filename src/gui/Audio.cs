@@ -11,7 +11,7 @@ using System.Threading;
 using System.IO;
 using ManagedBass;
 
-namespace PZgbaEmulator
+namespace DMSharpEmulator
 {
     public class Playback
     {
@@ -60,7 +60,7 @@ namespace PZgbaEmulator
 
                 AL.BufferData(buffer, GetSoundFormat(channels, bits_per_sample), sound_data, sound_data.Length, sample_rate);
                 AL.Source(source, ALSourcei.Buffer, buffer);
-
+               
 
                 Trace.Write("Playing");
 
@@ -84,4 +84,4 @@ namespace PZgbaEmulator
             }
         }
     }
-} 
+}

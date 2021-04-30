@@ -14,7 +14,7 @@
     <PackageReference Include="ManagedBass" Version="2.0.4" />
     <PackageReference Include="Microsoft.Win32.SystemEvents" Version="4.7.0" />
     <PackageReference Include="OpenGL" Version="0.9.0" />
-    <PackageReference Include="OpenTK" Version="4.6.3" />
+    <PackageReference Include="OpenTK" Version="3.1.0" />
     <PackageReference Include="Qml.Net" Version="0.10.1" />
     <PackageReference Include="Qml.Net.LinuxBinaries" Version="0.10.1" />
     <PackageReference Include="Qml.Net.OSXBinaries" Version="0.10.1" />

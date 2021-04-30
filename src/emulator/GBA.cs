@@ -2,7 +2,7 @@ public delegate void Callback();
 
 namespace PZgba
 {
-  class GBA
+  public class GBA
   {
     public ARM7 ARM7;
     public Memory Memory;

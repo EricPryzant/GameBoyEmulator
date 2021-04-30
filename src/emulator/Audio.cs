@@ -7,7 +7,7 @@ using static PZgba.Bits;
 
 namespace PZgba
 {
-  class Audio
+  public class Audio
   {
     public GBA Gba;
 

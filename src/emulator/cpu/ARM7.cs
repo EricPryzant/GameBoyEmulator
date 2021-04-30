@@ -3,35 +3,35 @@ using static PZgba.Bits;
 
 namespace PZgba
 {
-  class ARM7
+  public class ARM7
   {
     // Reference - https://problemkaputt.de/gbatek.htm#armcpuregisterset
     GBA GBA;
-    uint R0; // R0-R12 General Purpose Registers
-    uint R1;
-    uint R2;
-    uint R3;
-    uint R4;
-    uint R5;
-    uint R6;
-    uint R7;
-    uint R8;
-    uint R9;
-    uint R10;
-    uint R11;
-    uint R12;
-    uint R13; // Stack Pointer in THUMB state, in ARM state the user may decide to use it as a stack pointer or general purpose
-    uint R14; // Link Register - called by a Branch with Link
-    uint R15; // Program counter
+    public uint R0; // R0-R12 General Purpose Registers
+    public uint R1;
+    public uint R2;
+    public uint R3;
+    public uint R4;
+    public uint R5;
+    public uint R6;
+    public uint R7;
+    public uint R8;
+    public uint R9;
+    public uint R10;
+    public uint R11;
+    public uint R12;
+    public uint R13; // Stack Pointer in THUMB state, in ARM state the user may decide to use it as a stack pointer or general purpose
+    public uint R14; // Link Register - called by a Branch with Link
+    public uint R15; // Program counter
 
-    bool Sign = false;
-    bool Zero = false;
-    bool Carry = false;
-    bool Overflow = false;
-    bool Sticky = false;
-    bool IRQ_Disable = false;
-    bool FIQ_Disable = false;
-    bool Thumb_State = false;
+    public bool Sign = false;
+    public bool Zero = false;
+    public bool Carry = false;
+    public bool Overflow = false;
+    public bool Sticky = false;
+    public bool IRQ_Disable = false;
+    public bool FIQ_Disable = false;
+    public bool Thumb_State = false;
     uint Mode = 0;
     GBA Gba;
 

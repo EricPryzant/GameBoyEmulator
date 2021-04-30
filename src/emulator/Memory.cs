@@ -2,7 +2,7 @@ using System;
 
 namespace PZgba
 {
-  class Memory
+  public class Memory
   {
     // Reference - https://problemkaputt.de/gbatek.htm#gbamemorymap
     public Memory(GBA gba)

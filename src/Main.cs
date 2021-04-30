@@ -1,41 +1,61 @@
 using System;
 using System.Runtime.InteropServices;
-using static SDL2.SDL;
 using System.IO;
+using static SDL2.SDL;
 using OpenGL;
-using ImGuiNET;
-using System.Threading;
 using PZgba;
+using System.Threading;
+using ImGuiNET;
+using static Util;
 
 namespace PZgbaEmulator
 {
     class PZgbaEmulator
     {
-        static int width = 240;
-        static int height = 160;
-        static int channels = 3;
-        static byte[] image = new byte[width * height * channels];
-        static IntPtr Renderer;
-        static SDL_Rect rect = new SDL_Rect();
-
         static IntPtr window = IntPtr.Zero;
         static IntPtr glcontext;
-        static GBA Gba;
         static SDL_AudioSpec want, have;
         static uint AudioDevice;
         static ImGuiIOPtr ImGuiIO;
+        static GBA Gba;
+
         static private System.Numerics.Vector2 _scaleFactor = System.Numerics.Vector2.One;
 
         public static void Main(string[] args)
         {
-            new Thread(() =>
+            Gba = new GBA(AudioReady);
+
+            using (Game game = new Game(1600, 900, "PZ GBA", Gba))
             {
-                using (Game game = newGame(1600, 900, "PZ GBA"))
-                {
-                    game.Vsync = OpenTK.VSyncMode.On;
-                    game.Run(60.0, 60.0);
-                }
-            }).Start();
+                //Run takes a double, which is how many frames per second it should strive to reach.
+                //You can leave that out and it'll just update as fast as the hardware will allow it.
+                game.VSync = OpenTK.VSyncMode.On;
+                game.Run(60.0, 0.0);
+            }
+
+            SetupSDL();
+        }
+
+        public static void SetupSDL()
+        {
+            SDL_Init(SDL_INIT_AUDIO);
+            AudioDevice = SDL_OpenAudioDevice(null, 0, ref want, out have, (int)SDL_AUDIO_ALLOW_FORMAT_CHANGE);
+            SDL_PauseAudioDevice(AudioDevice, 0);
+        }
+
+        static void AudioReady()
+        {
+
+            int bytes = sizeof(float) * Gba.Audio.AudioQueue.Length;
+
+            IntPtr ptr = Marshal.AllocHGlobal(bytes);
+
+            Marshal.Copy(Gba.Audio.AudioQueue, 0, ptr, Gba.Audio.AudioQueue.Length);
+
+            Console.WriteLine("Outputting samples to SDL");
+
+            SDL_QueueAudio(AudioDevice, ptr, (uint)bytes);
+            Marshal.FreeHGlobal(ptr);
         }
     }
 }
