@@ -25,6 +25,12 @@ namespace PZgbaEmulator
         {
             Gba = new GBA(AudioReady);
 
+            byte[] bios = System.IO.File.ReadAllBytes("roms/GBA.BIOS");
+            bios.CopyTo(Gba.Mem.Bios, 0);
+            
+            byte[] rom = System.IO.File.ReadAllBytes("roms/armwrestler-gba-fixed.gba");
+            rom.CopyTo(Gba.Mem.Rom, 0);
+
             using (Game game = new Game(1600, 900, "PZ GBA", Gba))
             {
                 //Run takes a double, which is how many frames per second it should strive to reach.

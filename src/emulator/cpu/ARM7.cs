@@ -101,7 +101,29 @@ namespace PZgba
           // Shift by immediate or shift by register
           bool shiftByReg = (ins & BIT_4) != 0;
           Console.WriteLine($"Shift by reg: {shiftByReg}");
-          uint shiftBy;
+          
+          uint shiftBy = shiftByReg ? GetReg(regShiftId) : immShift;
+          uint shiftType = (ins >> 5) & 0b11;
+          uint op2Reg = ins & 0b1111;
+
+          // When using immediate as 2nd operand
+          uint operandShift = (ins >> 8) & 0b1111;
+          uint operand = ins & 0b11111111;
+
+          uint op2;
+          if (immediate)
+          {
+
+          } else {
+
+          }
+
+          switch (opcode)
+          {
+            case 0xD: //MOV
+            default:
+              throw new Exception($"ALU Opcode Unimplemented: {opcode:X}");
+          }
         }
         else
         {
@@ -109,12 +131,12 @@ namespace PZgba
         }
       }
     }
-    public uint GetReg(int reg)
+    public uint GetReg(uint reg)
     {
       return 0;
     }
 
-    public void SetReg(int reg, uint val)
+    public void SetReg(uint reg, uint val)
     {
 
     }
